@@ -1,0 +1,81 @@
+{
+  "model_name": "sentiment_baseline",
+  "training_time_seconds": 7.949422,
+  "cv_metrics": {
+    "cv_mean_f1": 1.0,
+    "cv_std_f1": 0.0,
+    "cv_scores": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "test_metrics": {
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "classification_report": {
+      "0": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 85.0
+      },
+      "1": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 49.0
+      },
+      "2": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 66.0
+      },
+      "accuracy": 1.0,
+      "macro avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 200.0
+      },
+      "weighted avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 200.0
+      }
+    },
+    "confusion_matrix": [
+      [
+        85,
+        0,
+        0
+      ],
+      [
+        0,
+        49,
+        0
+      ],
+      [
+        0,
+        0,
+        66
+      ]
+    ]
+  },
+  "artifacts": {
+    "model_path": "models/baseline\\sentiment_baseline_model_20250927_193227.pkl",
+    "vectorizer_path": "models/baseline\\sentiment_baseline_vectorizer_20250927_193227.pkl"
+  },
+  "parameters": {
+    "test_size": 0.2,
+    "random_state": 42,
+    "max_features": 10000,
+    "cv_folds": 5
+  }
+}

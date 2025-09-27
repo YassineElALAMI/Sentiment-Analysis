@@ -1,0 +1,14 @@
+2025-09-27 19:16:15,115 - __main__ - INFO - Starting preprocessing at 2025-09-27 19:16:15.114185
+2025-09-27 19:16:15,156 - __main__ - ERROR - Error during preprocessing: Input file not found: data/raw/tweets.csv
+Traceback (most recent call last):
+  File "C:\Users\hp\Desktop\projects_only\SentimentAnalysis\src\preprocess.py", line 103, in preprocess
+    raise FileNotFoundError(f"Input file not found: {input_path}")
+FileNotFoundError: Input file not found: data/raw/tweets.csv
+2025-09-27 19:16:15,216 - __main__ - CRITICAL - Preprocessing failed: Input file not found: data/raw/tweets.csv
+2025-09-27 19:25:08,903 - __main__ - INFO - Starting preprocessing at 2025-09-27 19:25:08.903268
+2025-09-27 19:25:08,906 - __main__ - INFO - Loading data from data/raw/tweets.csv
+2025-09-27 19:25:08,940 - __main__ - INFO - Loaded 1000 records
+2025-09-27 19:25:08,944 - __main__ - INFO - Cleaning text data...
+2025-09-27 19:25:21,455 - __main__ - INFO - Preprocessing completed in 12.55 seconds
+2025-09-27 19:25:21,458 - __main__ - INFO - Processed data saved to: data/processed\cleaned_20250927_192521.csv
+2025-09-27 19:25:21,459 - __main__ - INFO - Label mapping saved to: data/processed\label_mapping.json

@@ -1,0 +1,8 @@
+{
+  "processing_time_seconds": 12.549826,
+  "total_records": 1000,
+  "unique_labels": 3,
+  "empty_texts_after_cleaning": 0,
+  "output_file": "data/processed\\cleaned_20250927_192521.csv",
+  "label_mapping_file": "data/processed\\label_mapping.json"
+}

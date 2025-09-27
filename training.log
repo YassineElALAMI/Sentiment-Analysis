@@ -1,0 +1,83 @@
+2025-09-27 19:29:17,775 - __main__ - INFO - Starting training at 2025-09-27 19:29:17.775538
+2025-09-27 19:29:17,776 - __main__ - INFO - Loading data from data/processed/cleaned.csv
+2025-09-27 19:29:17,778 - __main__ - ERROR - Error loading data: [Errno 2] No such file or directory: 'data/processed/cleaned.csv'
+2025-09-27 19:29:17,778 - __main__ - ERROR - Training failed: [Errno 2] No such file or directory: 'data/processed/cleaned.csv'
+Traceback (most recent call last):
+  File "C:\Users\hp\Desktop\projects_only\SentimentAnalysis\src\train_baseline.py", line 290, in train_baseline
+    X, y = load_data(input_path)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hp\Desktop\projects_only\SentimentAnalysis\src\train_baseline.py", line 51, in load_data
+    df = pd.read_csv(input_path)
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\parsers\readers.py", line 1026, in read_csv
+    return _read(filepath_or_buffer, kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\parsers\readers.py", line 620, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\parsers\readers.py", line 1620, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\parsers\readers.py", line 1880, in _make_engine
+    self.handles = get_handle(
+                   ^^^^^^^^^^^
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\common.py", line 873, in get_handle
+    handle = open(
+             ^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'data/processed/cleaned.csv'
+2025-09-27 19:29:17,785 - __main__ - CRITICAL - Script failed: [Errno 2] No such file or directory: 'data/processed/cleaned.csv'
+Traceback (most recent call last):
+  File "C:\Users\hp\Desktop\projects_only\SentimentAnalysis\src\train_baseline.py", line 433, in <module>
+    results = train_baseline(
+              ^^^^^^^^^^^^^^^
+  File "C:\Users\hp\Desktop\projects_only\SentimentAnalysis\src\train_baseline.py", line 290, in train_baseline
+    X, y = load_data(input_path)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hp\Desktop\projects_only\SentimentAnalysis\src\train_baseline.py", line 51, in load_data
+    df = pd.read_csv(input_path)
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\parsers\readers.py", line 1026, in read_csv
+    return _read(filepath_or_buffer, kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\parsers\readers.py", line 620, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\parsers\readers.py", line 1620, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\parsers\readers.py", line 1880, in _make_engine
+    self.handles = get_handle(
+                   ^^^^^^^^^^^
+  File "C:\Users\hp\AppData\Local\Programs\Python\Python312\Lib\site-packages\pandas\io\common.py", line 873, in get_handle
+    handle = open(
+             ^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'data/processed/cleaned.csv'
+2025-09-27 19:29:49,216 - __main__ - INFO - Starting training at 2025-09-27 19:29:49.216523
+2025-09-27 19:29:49,216 - __main__ - INFO - Loading data from data/processed/cleaned.csv
+2025-09-27 19:29:49,232 - __main__ - ERROR - Training failed: invalid literal for int() with base 10: 'negative'
+Traceback (most recent call last):
+  File "C:\Users\hp\Desktop\projects_only\SentimentAnalysis\src\train_baseline.py", line 297, in train_baseline
+    label_map = {int(k): v for k, v in label_map.items()}
+                 ^^^^^^
+ValueError: invalid literal for int() with base 10: 'negative'
+2025-09-27 19:29:49,235 - __main__ - CRITICAL - Script failed: invalid literal for int() with base 10: 'negative'
+Traceback (most recent call last):
+  File "C:\Users\hp\Desktop\projects_only\SentimentAnalysis\src\train_baseline.py", line 433, in <module>
+    results = train_baseline(
+              ^^^^^^^^^^^^^^^
+  File "C:\Users\hp\Desktop\projects_only\SentimentAnalysis\src\train_baseline.py", line 297, in train_baseline
+    label_map = {int(k): v for k, v in label_map.items()}
+                 ^^^^^^
+ValueError: invalid literal for int() with base 10: 'negative'
+2025-09-27 19:32:19,276 - __main__ - INFO - Starting training at 2025-09-27 19:32:19.276430
+2025-09-27 19:32:19,277 - __main__ - INFO - Loading data from data/processed/cleaned.csv
+2025-09-27 19:32:19,288 - __main__ - INFO - Original label map: {'negative': 0, 'neutral': 1, 'positive': 2}
+2025-09-27 19:32:19,289 - __main__ - INFO - Processed label map: {0: 0, 1: 1, 2: 2}
+2025-09-27 19:32:19,305 - __main__ - INFO - Fitting TF-IDF vectorizer
+2025-09-27 19:32:19,323 - __main__ - INFO - Training logistic_regression model with 5-fold CV
+2025-09-27 19:32:25,477 - __main__ - INFO - CV F1 Score: 1.0000 ± 0.0000
+2025-09-27 19:32:27,216 - __main__ - INFO - Model evaluation complete. Metrics saved to models/baseline\sentiment_baseline_metrics.json
+2025-09-27 19:32:27,224 - __main__ - INFO - Model saved to models/baseline\sentiment_baseline_model_20250927_193227.pkl
+2025-09-27 19:32:27,224 - __main__ - INFO - Vectorizer saved to models/baseline\sentiment_baseline_vectorizer_20250927_193227.pkl
+2025-09-27 19:32:27,226 - __main__ - INFO - Training completed in 7.95 seconds
+2025-09-27 19:32:27,227 - __main__ - INFO - Results saved to models/baseline\sentiment_baseline_training_results.json
