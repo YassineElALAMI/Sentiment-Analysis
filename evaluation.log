@@ -164,3 +164,12 @@ Traceback (most recent call last):
   File "C:\Users\hp\AppData\Local\Programs\Python\Python312\Lib\site-packages\keras\src\saving\saving_api.py", line 206, in load_model
     raise ValueError(
 ValueError: File format not supported: filepath=none. Keras 3 only supports V3 `.keras` files and legacy H5 format files (`.h5` extension). Note that the legacy SavedModel format is not supported by `load_model()` in Keras 3. In order to reload a TensorFlow SavedModel as an inference-only layer in Keras 3, use `keras.layers.TFSMLayer(none, call_endpoint='serving_default')` (note that your `call_endpoint` might have a different name).
+2025-09-28 14:20:55,137 - __main__ - INFO - Loading evaluation data from data/processed/cleaned.csv
+2025-09-28 14:20:55,262 - __main__ - INFO - Loading label mapping from data/processed\label_mapping.json
+2025-09-28 14:20:55,270 - __main__ - INFO - Original label map: {'negative': 0, 'neutral': 1, 'positive': 2}
+2025-09-28 14:20:55,271 - __main__ - INFO - Processed label map: {0: 'negative', 1: 'neutral', 2: 'positive'}
+2025-09-28 14:20:55,272 - __main__ - INFO - Evaluating baseline model: models/baseline/sentiment_baseline_model.pkl
+2025-09-28 14:20:59,268 - __main__ - INFO - Evaluation complete. Metrics saved to evaluation_results\baseline_evaluation_metrics.json
+2025-09-28 14:20:59,271 - __main__ - INFO - Evaluating LSTM model: models/lstm_model.keras
+2025-09-28 14:21:11,405 - __main__ - INFO - Evaluation complete. Metrics saved to evaluation_results\lstm_evaluation_metrics.json
+2025-09-28 14:21:11,438 - __main__ - INFO - Combined evaluation results saved to evaluation_results\combined_evaluation_results.json

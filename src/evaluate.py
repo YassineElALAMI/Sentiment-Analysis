@@ -17,7 +17,6 @@ from sklearn.metrics import (
     confusion_matrix,
     accuracy_score,
     precision_recall_fscore_support,
-    roc_auc_score,
     roc_curve,
     auc,
     precision_recall_curve,
@@ -25,6 +24,7 @@ from sklearn.metrics import (
 )
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import tokenizer_from_json
 
 # Configure logging
 logging.basicConfig(
@@ -73,40 +73,59 @@ def load_data(
         logger.error(f"Error loading evaluation data: {e}")
         raise
 
-def load_label_mapping(input_dir: str) -> Dict[int, str]:
+def load_label_mapping(
+    path: str
+) -> Dict[int, str]:
     """
     Load and process label mapping from JSON file.
     
     Args:
-        input_dir: Directory containing label_mapping.json
+        path: Path to label_mapping.json or a directory containing it
         
     Returns:
         Dictionary mapping label indices to names
     """
     try:
-        label_map_path = os.path.join(input_dir, "label_mapping.json")
-        logger.info(f"Loading label mapping from {label_map_path}")
-        
-        with open(label_map_path, 'r') as f:
-            label_map = json.load(f)
-            
-        logger.info(f"Original label map: {label_map}")
-        
-        # Handle different label map formats
-        if all(isinstance(k, str) and k.isdigit() for k in label_map.keys()):
-            # Case 1: Keys are numeric strings (e.g., {"0": "negative", "1": "positive"})
-            processed_map = {int(k): v for k, v in label_map.items()}
-        elif all(isinstance(k, str) and not k.isdigit() for k in label_map.keys()):
-            # Case 2: Keys are string labels (e.g., {"negative": 0, "positive": 1})
-            # Create reverse mapping: index -> label
-            reverse_map = {v: k for k, v in label_map.items()}
-            processed_map = reverse_map
+        # Resolve whether path is a directory or a file
+        if os.path.isdir(path):
+            label_map_path = os.path.join(path, "label_mapping.json")
         else:
-            # Case 3: Mixed or unexpected format, create a new mapping
-            logger.warning("Unexpected label map format. Creating new mapping...")
-            unique_labels = sorted(set(label_map.values()) if isinstance(list(label_map.values())[0], str) else label_map.keys())
-            processed_map = {i: label for i, label in enumerate(unique_labels)}
-        
+            label_map_path = path
+
+        logger.info(f"Loading label mapping from {label_map_path}")
+
+        if not os.path.exists(label_map_path):
+            raise FileNotFoundError(f"Label mapping file not found: {label_map_path}")
+
+        with open(label_map_path, 'r', encoding='utf-8') as f:
+            label_map = json.load(f)
+
+        logger.info(f"Original label map: {label_map}")
+
+        # Normalize to {int_label: str_name}
+        if all(isinstance(k, str) and k.isdigit() for k in label_map.keys()):
+            # Keys are numeric strings -> convert to ints
+            processed_map = {int(k): (v if isinstance(v, str) else f"Class {v}") for k, v in label_map.items()}
+        elif all(isinstance(k, int) for k in label_map.keys()):
+            # Keys are already ints
+            processed_map = {int(k): (v if isinstance(v, str) else f"Class {v}") for k, v in label_map.items()}
+        elif all(isinstance(k, str) and not k.isdigit() for k in label_map.keys()):
+            # Keys are string labels (e.g., {"negative": 0, "positive": 1}) -> invert
+            processed_map = {int(v): str(k) for k, v in label_map.items()}
+        else:
+            # Fallback: build a consistent mapping
+            logger.warning("Unexpected label map format. Attempting to build a consistent mapping.")
+            try:
+                # Prefer values if they look like class names
+                if all(isinstance(v, str) for v in label_map.values()):
+                    unique_labels = sorted(set(label_map.values()))
+                    processed_map = {i: label for i, label in enumerate(unique_labels)}
+                else:
+                    unique_keys = sorted(label_map.keys())
+                    processed_map = {int(i): f"Class {int(i)}" for i in unique_keys}
+            except Exception:
+                raise ValueError("Could not process label mapping into {int: str} format")
+
         logger.info(f"Processed label map: {processed_map}")
         return processed_map
         
@@ -172,7 +191,7 @@ def evaluate_lstm_model(
     output_dir: str,
     label_map: Dict[int, str],
     model_name: str = "lstm",
-    max_sequence_length: int = 50
+    max_sequence_length: int = 100
 ) -> Dict[str, Any]:
     """
     Evaluate an LSTM model.
@@ -195,8 +214,15 @@ def evaluate_lstm_model(
         
         # Load model and tokenizer
         model = load_model(model_path)
-        tokenizer = joblib.load(tokenizer_path)
-        
+        # Tokenizer saved by training as JSON string-in-JSON; handle both raw JSON or JSON string
+        with open(tokenizer_path, 'r', encoding='utf-8') as f:
+            tok_obj = json.load(f)
+        if isinstance(tok_obj, str):
+            tok_json = tok_obj
+        else:
+            tok_json = json.dumps(tok_obj)
+        tokenizer = tokenizer_from_json(tok_json)
+
         # Tokenize and pad test data
         X_test_seq = tokenizer.texts_to_sequences(X_test)
         X_test_pad = pad_sequences(X_test_seq, maxlen=max_sequence_length, padding="post")
@@ -459,14 +485,14 @@ def parse_arguments():
     model_group.add_argument(
         "--baseline-model", 
         type=str, 
-        default="models/baseline/sentiment_baseline_model_20250927_193227.pkl",
-        help="Path to baseline model (default: models/baseline/sentiment_baseline_model_20250927_193227.pkl)"
+        default="models/baseline/sentiment_baseline_model.pkl",
+        help="Path to baseline model (default: models/baseline/sentiment_baseline_model.pkl)"
     )
     model_group.add_argument(
         "--vectorizer", 
         type=str, 
-        default="models/baseline/sentiment_baseline_vectorizer_20250927_193227.pkl",
-        help="Path to TF-IDF vectorizer (default: models/baseline/sentiment_baseline_vectorizer_20250927_193227.pkl)"
+        default="models/baseline/sentiment_baseline_vectorizer.pkl",
+        help="Path to TF-IDF vectorizer (default: models/baseline/sentiment_baseline_vectorizer.pkl)"
     )
     model_group.add_argument(
         "--lstm-model", 
@@ -506,8 +532,8 @@ def parse_arguments():
     eval_group.add_argument(
         "--max-seq-length", 
         type=int, 
-        default=50,
-        help="Maximum sequence length for LSTM (default: 50)"
+        default=100,
+        help="Maximum sequence length for LSTM (default: 100)"
     )
     
     return parser.parse_args()
@@ -523,14 +549,17 @@ def main():
         # Load data
         X, y = load_data(args.input, args.text_col, args.label_col)
         
-        # Load label mapping
-        if args.label_map:
-            label_map_path = os.path.dirname(args.label_map)
-            label_map = load_label_mapping(label_map_path)
-        else:
-            # Default to same directory as input file
-            input_dir = os.path.dirname(args.input)
-            label_map = load_label_mapping(input_dir)
+        # Load label mapping (robust to file or directory). Fallback to derive from data.
+        try:
+            if args.label_map:
+                label_map = load_label_mapping(args.label_map)
+            else:
+                # Default to same directory as input file
+                label_map = load_label_mapping(os.path.dirname(args.input))
+        except Exception as e:
+            logger.warning(f"Label mapping not found or invalid: {e}. Deriving mapping from labels present in data.")
+            unique_labels = sorted(pd.Series(y).astype(int).unique().tolist())
+            label_map = {int(i): f"Class {int(i)}" for i in unique_labels}
         
         # Evaluate models
         results = {}
